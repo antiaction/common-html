@@ -16,12 +16,14 @@ import java.util.Map;
  */
 public abstract class HTMLItem {
 
-	public static int T_TEXT = 0;
-	public static int T_PROCESSING = 1;
-	public static int T_EXCLAMATION = 2;
-	public static int T_COMMENT = 3;
-	public static int T_ENDTAG = 4;
-	public static int T_TAG = 5;
+	public static final int T_TEXT = 0;
+	public static final int T_PROCESSING = 1;
+	public static final int T_EXCLAMATION = 2;
+	public static final int T_COMMENT = 3;
+	public static final int T_ENDTAG = 4;
+	public static final int T_TAG = 5;
+
+	public abstract Object clone();
 
 	public abstract int getType();
 

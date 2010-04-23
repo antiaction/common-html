@@ -20,6 +20,10 @@ public class HTMLText extends HTMLItem {
 		this.text = text;
 	}
 
+	public Object clone() {
+		return new HTMLText( text );
+	}
+
 	public int getType() {
 		return HTMLItem.T_TEXT;
 	}

@@ -22,6 +22,10 @@ public class HTMLExclamation extends HTMLItem {
 		this.exclamation = exclamation;
 	}
 
+	public Object clone() {
+		return new HTMLExclamation( tagText, exclamation );
+	}
+
 	public int getType() {
 		return HTMLItem.T_EXCLAMATION;
 	}
