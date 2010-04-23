@@ -22,6 +22,10 @@ public class HTMLComment extends HTMLItem {
 		this.comment = comment;
 	}
 
+	public Object clone() {
+		return new HTMLComment( tagText, comment );
+	}
+
 	public int getType() {
 		return HTMLItem.T_COMMENT;
 	}

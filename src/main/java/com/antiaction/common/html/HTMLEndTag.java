@@ -22,6 +22,10 @@ public class HTMLEndTag extends HTMLItem {
 		this.tagName = tagName;
 	}
 
+	public Object clone() {
+		return new HTMLEndTag( tagText, tagName );
+	}
+
 	public int getType() {
 		return HTMLItem.T_ENDTAG;
 	}

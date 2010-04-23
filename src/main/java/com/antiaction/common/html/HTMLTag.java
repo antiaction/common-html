@@ -26,6 +26,14 @@ public class HTMLTag extends HTMLItem {
 		this.tagName = tagName;
 	}
 
+	public Object clone() {
+		HTMLTag htmlTag = new HTMLTag( tagName );
+		htmlTag.tagText = tagText;
+		htmlTag.attributes = new HashMap( attributes );
+		htmlTag.closed = closed;
+		return htmlTag;
+	}
+
 	public void attribute(String name, String value) {
 		attributes.put( name, value );
 	}

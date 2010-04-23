@@ -22,6 +22,10 @@ public class HTMLProcessing extends HTMLItem {
 		this.processing = processing;
 	}
 
+	public Object clone() {
+		return new HTMLProcessing( tagText, processing );
+	}
+
 	public int getType() {
 		return HTMLItem.T_PROCESSING;
 	}
