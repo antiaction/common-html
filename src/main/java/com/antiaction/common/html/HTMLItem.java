@@ -33,11 +33,19 @@ public abstract class HTMLItem {
 		throw new UnsupportedOperationException( "Unsupported method." );
 	}
 
-	public String getAttribute(String attrib) {
+	public Map getAttributes() {
 		throw new UnsupportedOperationException( "Unsupported method." );
 	}
 
-	public Map getAttributes() {
+	public String getAttribute(String name) {
+		throw new UnsupportedOperationException( "Unsupported method." );
+	}
+
+	public Object setAttribute(String name, String value) {
+		throw new UnsupportedOperationException( "Unsupported method." );
+	}
+
+	public Object removeAttribute(String name) {
 		throw new UnsupportedOperationException( "Unsupported method." );
 	}
 
