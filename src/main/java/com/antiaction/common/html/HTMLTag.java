@@ -58,12 +58,20 @@ public class HTMLTag extends HTMLItem {
 		return tagName;
 	}
 
-	public String getAttribute(String attrib) {
-		return (String)attributes.get( attrib );
-	}
-
 	public Map getAttributes() {
 		return attributes;
+	}
+
+	public String getAttribute(String name) {
+		return (String)attributes.get( name );
+	}
+
+	public Object setAttribute(String name, String value) {
+		return attributes.put( name, value );
+	}
+
+	public Object removeAttribute(String name) {
+		return attributes.remove( name );
 	}
 
 	public boolean getClosed() {

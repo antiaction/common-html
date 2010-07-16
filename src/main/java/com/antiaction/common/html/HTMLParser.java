@@ -67,7 +67,7 @@ public class HTMLParser {
 					result.add( new HTMLProcessing( tokenizer.tagBuf.toString(), tokenizer.procBuf.toString() ) );
 					break;
 				case HTMLConst.T_EXCLTYPE:
-					result.add( new HTMLProcessing( tokenizer.tagBuf.toString(), tokenizer.excltypeBuf.toString() ) );
+					result.add( new HTMLExclamation( tokenizer.tagBuf.toString(), tokenizer.excltypeBuf.toString() ) );
 					break;
 				case HTMLConst.T_COMMENT:
 					result.add( new HTMLComment( tokenizer.tagBuf.toString(), tokenizer.commentBuf.toString() ) );
