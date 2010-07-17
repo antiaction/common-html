@@ -4,6 +4,7 @@
  * To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
+
 package com.antiaction.common.html;
 
 import java.util.Map;
