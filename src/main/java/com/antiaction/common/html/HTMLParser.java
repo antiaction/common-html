@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.Reader;
 //import java.io.StringReader;
 import java.util.List;
 import java.util.ArrayList;
@@ -44,6 +45,18 @@ public class HTMLParser {
 	*/
 
 	public List parse(InputStream in) throws IOException {
+		List result = parse( HtmlStreamInput.getInstance( in ) );
+		in.close();
+		return result;
+	}
+
+	public List parse(Reader in) throws IOException {
+		List result = parse( HtmlReaderInput.getInstance( in ) );
+		in.close();
+		return result;
+	}
+
+	public List parse(HtmlInput in) throws IOException {
 		tokenizer.init( in );
 		int state = 0;
 		List result = new ArrayList();

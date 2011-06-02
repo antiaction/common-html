@@ -55,7 +55,7 @@ public class HTMLTokenizer {
 	private char quote;
 	private char missed = 0;
 
-	private InputStream in;
+	private HtmlInput in;
 
 	StringBuffer textBuf = new StringBuffer( 1024 );
 	StringBuffer tagBuf = new StringBuffer( 256 );
@@ -66,7 +66,7 @@ public class HTMLTokenizer {
 	StringBuffer tagnameBuf = new StringBuffer( 16 );
 	StringBuffer tagtextBuf = new StringBuffer( 64 );
 
-	public void init(InputStream in) {
+	public void init(HtmlInput in) {
 		this.in = in;
 		missed = 0;
 	}
@@ -565,7 +565,8 @@ public class HTMLTokenizer {
 		try {
 			InputStream in = new FileInputStream( file );
 			HTMLTokenizer tokenizer = new HTMLTokenizer();
-			tokenizer.init( in );
+			tokenizer.init( HtmlStreamInput.getInstance( in ) );
+			in.close();
 
 			ram = new RandomAccessFile( "log.txt", "rw" );
 			ram.setLength( 0 );
