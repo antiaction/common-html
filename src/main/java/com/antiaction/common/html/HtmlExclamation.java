@@ -13,22 +13,22 @@ package com.antiaction.common.html;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class HTMLExclamation extends HTMLItem {
+public class HtmlExclamation extends HtmlItem {
 
 	private String tagText;
 	private String exclamation;
 
-	public HTMLExclamation(String tagText, String exclamation) {
+	public HtmlExclamation(String tagText, String exclamation) {
 		this.tagText = tagText;
 		this.exclamation = exclamation;
 	}
 
 	public Object clone() {
-		return new HTMLExclamation( tagText, exclamation );
+		return new HtmlExclamation( tagText, exclamation );
 	}
 
 	public int getType() {
-		return HTMLItem.T_EXCLAMATION;
+		return HtmlItem.T_EXCLAMATION;
 	}
 
 	public String getText() {

@@ -7,7 +7,7 @@
 
 package com.antiaction.common.html;
 
-public class HTMLEntity {
+public class HtmlEntity {
 
 	public static StringBuffer encodeHtmlEntities(String str) {
 		StringBuffer sb = new StringBuffer( str );

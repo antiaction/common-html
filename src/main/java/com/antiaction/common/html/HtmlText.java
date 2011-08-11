@@ -13,20 +13,20 @@ package com.antiaction.common.html;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class HTMLText extends HTMLItem {
+public class HtmlText extends HtmlItem {
 
 	private String text;
 
-	public HTMLText(String text) {
+	public HtmlText(String text) {
 		this.text = text;
 	}
 
 	public Object clone() {
-		return new HTMLText( text );
+		return new HtmlText( text );
 	}
 
 	public int getType() {
-		return HTMLItem.T_TEXT;
+		return HtmlItem.T_TEXT;
 	}
 
 	public String getText() {

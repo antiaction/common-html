@@ -13,22 +13,22 @@ package com.antiaction.common.html;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class HTMLProcessing extends HTMLItem {
+public class HtmlProcessing extends HtmlItem {
 
 	private String tagText;
 	private String processing;
 
-	public HTMLProcessing(String tagText, String processing) {
+	public HtmlProcessing(String tagText, String processing) {
 		this.tagText = tagText;
 		this.processing = processing;
 	}
 
 	public Object clone() {
-		return new HTMLProcessing( tagText, processing );
+		return new HtmlProcessing( tagText, processing );
 	}
 
 	public int getType() {
-		return HTMLItem.T_PROCESSING;
+		return HtmlItem.T_PROCESSING;
 	}
 
 	public String getText() {
