@@ -1,38 +1,33 @@
 /*
- * Created on 02-02-2005
+ * Created on 10/08/2011
  *
- * To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * TODO To change the template for this generated file go to
+ * Window - Preferences - Java - Code Style - Code Templates
  */
 
 package com.antiaction.common.html;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
-/**
- * @author Nicholas
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
-public class HtmlTag extends HtmlItem {
+public class HtmlDirective extends HtmlTag {
 
 	private String tagText;
 	private String tagName;
 	private Map attributes = new HashMap();
-	private boolean closed = false;
+	private boolean closed = true;
 
-	public HtmlTag(String tagName) {
-		this.tagName = tagName;
+	public HtmlDirective(String tagName) {
+		super( tagName );
+		//this.tagName = tagName;
 	}
 
 	public Object clone() {
-		HtmlTag htmlTag = new HtmlTag( tagName );
-		htmlTag.tagText = tagText;
-		htmlTag.attributes = new HashMap( attributes );
-		htmlTag.closed = closed;
-		return htmlTag;
+		HtmlDirective htmlDirective = new HtmlDirective( tagName );
+		htmlDirective.tagText = tagText;
+		htmlDirective.attributes = new HashMap( attributes );
+		htmlDirective.closed = closed;
+		return htmlDirective;
 	}
 
 	public void attribute(String name, String value) {
@@ -40,7 +35,7 @@ public class HtmlTag extends HtmlItem {
 	}
 
 	public void setClosed(boolean closed) {
-		this.closed = closed;
+		//this.closed = closed;
 	}
 
 	public void setText(String tagText) {
@@ -48,7 +43,7 @@ public class HtmlTag extends HtmlItem {
 	}
 
 	public int getType() {
-		return HtmlItem.T_TAG;
+		return HtmlItem.T_DIRECTIVE;
 	}
 
 	public String getText() {

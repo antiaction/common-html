@@ -20,7 +20,7 @@ package com.antiaction.common.html;
  * @version 1.00
  * @author Nicholas Clarke <mayhem[at]antiaction[dot]com>
  */
-public class HTMLConst {
+public class HtmlConst {
 
 	public static final int T_ERROR = 0;
 	public static final int T_EOS = 1;
@@ -35,5 +35,6 @@ public class HTMLConst {
 	public static final int T_TAG_TEXT_QUOTED = 10;
 	public static final int T_TAG_CLOSED = 11;
 	public static final int T_TAG_END = 12;
+	public static final int T_DIRECTIVE_START = 13;
 
 }
