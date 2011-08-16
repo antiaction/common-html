@@ -61,7 +61,7 @@ public class HtmlParser {
 		int state = 0;
 		List result = new ArrayList();
 
-		HtmlTag htmlTag = null;
+		HtmlTagBase htmlTag = null;
 		String attribName = null;
 		boolean eq = false;
 		String attribValue = null;
