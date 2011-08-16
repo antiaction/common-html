@@ -8,18 +8,12 @@
 package com.antiaction.common.html;
 
 import java.util.HashMap;
-import java.util.Map;
 
-public class HtmlDirective extends HtmlTag {
-
-	private String tagText;
-	private String tagName;
-	private Map attributes = new HashMap();
-	private boolean closed = true;
+public class HtmlDirective extends HtmlTagBase {
 
 	public HtmlDirective(String tagName) {
-		super( tagName );
-		//this.tagName = tagName;
+		this.tagName = tagName;
+		this.closed = true;
 	}
 
 	public Object clone() {
@@ -30,36 +24,11 @@ public class HtmlDirective extends HtmlTag {
 		return htmlDirective;
 	}
 
-	public void attribute(String name, String value) {
-		attributes.put( name, value );
-	}
-
-	public void setClosed(boolean closed) {
-		//this.closed = closed;
-	}
-
-	public void setText(String tagText) {
-		this.tagText = tagText;
-	}
-
 	public int getType() {
 		return HtmlItem.T_DIRECTIVE;
 	}
 
-	public String getText() {
-		return tagText;
-	}
-
-	public String getTagname() {
-		return tagName;
-	}
-
-	public Map getAttributes() {
-		return attributes;
-	}
-
-	public String getAttribute(String name) {
-		return (String)attributes.get( name );
+	public void setText(String tagText) {
 	}
 
 	public Object setAttribute(String name, String value) {
@@ -70,8 +39,7 @@ public class HtmlDirective extends HtmlTag {
 		return attributes.remove( name );
 	}
 
-	public boolean getClosed() {
-		return closed;
+	public void setClosed(boolean closed) {
 	}
 
 }
