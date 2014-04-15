@@ -7,8 +7,9 @@
 
 package com.antiaction.common.html;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.junit.Assert;
 
 public class TestHtmlExclamation extends TestCase {
 
@@ -26,6 +27,12 @@ public class TestHtmlExclamation extends TestCase {
 		Assert.assertEquals( HtmlItem.T_EXCLAMATION, htmlItem2.getType() );
 		Assert.assertEquals( null, htmlItem2.getText() );
 
+		try {
+			htmlItem.setText( "test" );
+			Assert.fail( "Exception expected!" );
+		}
+		catch (UnsupportedOperationException e) {
+		}
 		try {
 			htmlItem.getTagname();
 			Assert.fail( "Exception expected!" );
@@ -58,6 +65,12 @@ public class TestHtmlExclamation extends TestCase {
 		}
 		try {
 			htmlItem.getClosed();
+			Assert.fail( "Exception expected!" );
+		}
+		catch (UnsupportedOperationException e) {
+		}
+		try {
+			htmlItem.setClosed( true );
 			Assert.fail( "Exception expected!" );
 		}
 		catch (UnsupportedOperationException e) {
