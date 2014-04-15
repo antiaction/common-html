@@ -7,8 +7,9 @@
 
 package com.antiaction.common.html;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.junit.Assert;
 
 public class TestHtmlDirective extends TestCase {
 
