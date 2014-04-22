@@ -17,6 +17,10 @@ public class TestHtmlComment extends TestCase {
 		HtmlComment htmlItem;
 		HtmlComment htmlItem2;
 
+		/*
+		 * Null parameters.
+		 */
+
 		htmlItem = new HtmlComment( null, null );
 		Assert.assertNotNull( htmlItem );
 		Assert.assertEquals( HtmlItem.T_COMMENT, htmlItem.getType() );
@@ -26,6 +30,24 @@ public class TestHtmlComment extends TestCase {
 		Assert.assertNotNull( htmlItem2 );
 		Assert.assertEquals( HtmlItem.T_COMMENT, htmlItem2.getType() );
 		Assert.assertEquals( null, htmlItem2.getText() );
+
+		/*
+		 * Values.
+		 */
+
+		htmlItem = new HtmlComment( "<!-- #include virtual=\"inc_menu.html\" -->", " #include virtual=\"inc_menu.html\" " );
+		Assert.assertNotNull( htmlItem );
+		Assert.assertEquals( HtmlItem.T_COMMENT, htmlItem.getType() );
+		Assert.assertEquals( "<!-- #include virtual=\"inc_menu.html\" -->", htmlItem.getText() );
+
+		htmlItem2 = (HtmlComment)htmlItem.clone();
+		Assert.assertNotNull( htmlItem2 );
+		Assert.assertEquals( HtmlItem.T_COMMENT, htmlItem2.getType() );
+		Assert.assertEquals( "<!-- #include virtual=\"inc_menu.html\" -->", htmlItem2.getText() );
+
+		/*
+		 * UnsupportedOperationException.
+		 */
 
 		try {
 			htmlItem.setText( "test" );

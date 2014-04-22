@@ -17,6 +17,10 @@ public class TestHtmlText extends TestCase {
 		HtmlText htmlItem;
 		HtmlText htmlItem2;
 
+		/*
+		 * Null parameters.
+		 */
+
 		htmlItem = new HtmlText( null );
 		Assert.assertNotNull( htmlItem );
 		Assert.assertEquals( HtmlItem.T_TEXT, htmlItem.getType() );
@@ -26,6 +30,24 @@ public class TestHtmlText extends TestCase {
 		Assert.assertNotNull( htmlItem2 );
 		Assert.assertEquals( HtmlItem.T_TEXT, htmlItem2.getType() );
 		Assert.assertEquals( null, htmlItem2.getText() );
+
+		/*
+		 * Values.
+		 */
+
+		htmlItem = new HtmlText( "Hello world" );
+		Assert.assertNotNull( htmlItem );
+		Assert.assertEquals( HtmlItem.T_TEXT, htmlItem.getType() );
+		Assert.assertEquals( "Hello world", htmlItem.getText() );
+
+		htmlItem2 = (HtmlText)htmlItem.clone();
+		Assert.assertNotNull( htmlItem2 );
+		Assert.assertEquals( HtmlItem.T_TEXT, htmlItem2.getType() );
+		Assert.assertEquals( "Hello world", htmlItem2.getText() );
+
+		/*
+		 * UnsupportedOperationException.
+		 */
 
 		try {
 			htmlItem.setText( "test" );
