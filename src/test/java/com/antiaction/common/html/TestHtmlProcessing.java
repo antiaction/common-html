@@ -17,6 +17,10 @@ public class TestHtmlProcessing extends TestCase {
 		HtmlProcessing htmlItem;
 		HtmlProcessing htmlItem2;
 
+		/*
+		 * Null parameters.
+		 */
+
 		htmlItem = new HtmlProcessing( null, null );
 		Assert.assertNotNull( htmlItem );
 		Assert.assertEquals( HtmlItem.T_PROCESSING, htmlItem.getType() );
@@ -26,6 +30,24 @@ public class TestHtmlProcessing extends TestCase {
 		Assert.assertNotNull( htmlItem2 );
 		Assert.assertEquals( HtmlItem.T_PROCESSING, htmlItem2.getType() );
 		Assert.assertEquals( null, htmlItem2.getText() );
+
+		/*
+		 * Values.
+		 */
+
+		htmlItem = new HtmlProcessing( "<?Monkeys?>", "Monkeys" );
+		Assert.assertNotNull( htmlItem );
+		Assert.assertEquals( HtmlItem.T_PROCESSING, htmlItem.getType() );
+		Assert.assertEquals( "<?Monkeys?>", htmlItem.getText() );
+
+		htmlItem2 = (HtmlProcessing)htmlItem.clone();
+		Assert.assertNotNull( htmlItem2 );
+		Assert.assertEquals( HtmlItem.T_PROCESSING, htmlItem2.getType() );
+		Assert.assertEquals( "<?Monkeys?>", htmlItem2.getText() );
+
+		/*
+		 * UnsupportedOperationException.
+		 */
 
 		try {
 			htmlItem.setText( "test" );

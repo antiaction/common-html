@@ -8,11 +8,9 @@
 package com.antiaction.common.html;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -32,85 +30,27 @@ public class TestHtmlParser extends TestCase {
 		sb.append( "</html>" );
 		sb.append( "<?Monkeys?>" );
 
-		Object[][] expected = new Object[][] {
-				{
-					HtmlItem.T_EXCLAMATION
-				},
-				{
-					HtmlItem.T_TAG
-				},
-				{
-					HtmlItem.T_DIRECTIVE
-				},
-				{
-					HtmlItem.T_COMMENT
-				},
-				{
-					HtmlItem.T_TEXT
-				},
-				{
-					HtmlItem.T_ENDTAG
-				},
-				{
-					HtmlItem.T_PROCESSING
-				},
-		};
-
 		byte[] bytes;
 		ByteArrayInputStream in;
-		HtmlItem htmlItem;
-		int type;
+		HtmlParser parser = new HtmlParser();
+		List result;
 		try {
 			bytes = sb.toString().getBytes( "UTF-8" );
 			in = new ByteArrayInputStream( bytes );
 
-			HtmlParser parser = new HtmlParser();
-			List result = parser.parse( in );
+			result = parser.parse( in );
 
-			Assert.assertEquals( expected.length, result.size() );
+			Assert.assertNotNull( result );
 
-			for ( int i=0; i<result.size(); ++i ) {
-				htmlItem = (HtmlItem)result.get( i );
-				type = htmlItem.getType();
+			validateResult( result );
 
-				// debug
-				System.out.println( htmlItem.getType() );
+			Reader reader = new StringReader( sb.toString() );
 
-				Assert.assertEquals( expected[ i ][ 0 ], htmlItem.getType() );
+			result = parser.parse( reader );
 
-				switch ( type ) {
-				case HtmlItem.T_EXCLAMATION:
-					Assert.assertEquals( "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">", htmlItem.getText() );
-					break;
-				case HtmlItem.T_TAG:
-					Assert.assertEquals( "<html lang=\"en\">", htmlItem.getText() );
-					Assert.assertEquals( "html", htmlItem.getTagname() );
-					Assert.assertEquals( 1, htmlItem.getAttributes().size() );
-					Assert.assertEquals( "en", htmlItem.getAttribute( "lang" ) );
-					Assert.assertEquals( false, htmlItem.getClosed() );
-					break;
-				case HtmlItem.T_DIRECTIVE:
-					//Assert.assertEquals( "<@master file=\"master.html\">", htmlItem.getText() );
-					Assert.assertEquals( "master", htmlItem.getTagname() );
-					Assert.assertEquals( 1, htmlItem.getAttributes().size() );
-					Assert.assertEquals( "master.html", htmlItem.getAttribute( "file" ) );
-					Assert.assertEquals( true, htmlItem.getClosed() );
-					break;
-				case HtmlItem.T_COMMENT:
-					Assert.assertEquals( "<!-- #include virtual=\"inc_menu.html\" -->", htmlItem.getText() );
-					break;
-				case HtmlItem.T_TEXT:
-					Assert.assertEquals( "Hello world", htmlItem.getText() );
-					break;
-				case HtmlItem.T_ENDTAG:
-					Assert.assertEquals( "</html>", htmlItem.getText() );
-					Assert.assertEquals( "html", htmlItem.getTagname() );
-					break;
-				case HtmlItem.T_PROCESSING:
-					Assert.assertEquals( "<?Monkeys?>", htmlItem.getText() );
-					break;
-				}
-			}
+			Assert.assertNotNull( result );
+
+			validateResult( result );
 		}
 		catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -122,37 +62,77 @@ public class TestHtmlParser extends TestCase {
 		}
 	}
 
-	public static void main(String[] args) {
-		String file = "C:\\dk.alfa-chins.www\\guestbook.html";
+	Object[][] expected = new Object[][] {
+			{
+				HtmlItem.T_EXCLAMATION
+			},
+			{
+				HtmlItem.T_TAG
+			},
+			{
+				HtmlItem.T_DIRECTIVE
+			},
+			{
+				HtmlItem.T_COMMENT
+			},
+			{
+				HtmlItem.T_TEXT
+			},
+			{
+				HtmlItem.T_ENDTAG
+			},
+			{
+				HtmlItem.T_PROCESSING
+			},
+	};
 
-		RandomAccessFile ram = null;
+	public void validateResult(List result) {
+		HtmlItem htmlItem;
+		int type;
 
-		try {
-			InputStream in = new FileInputStream( file );
-			HtmlParser parser = new HtmlParser();
-			List result = parser.parse( in );
+		Assert.assertEquals( expected.length, result.size() );
 
-			ram = new RandomAccessFile( "log2.txt", "rw" );
-			ram.setLength( 0 );
-			ram.seek( 0 );
+		for ( int i=0; i<result.size(); ++i ) {
+			htmlItem = (HtmlItem)result.get( i );
+			type = htmlItem.getType();
 
-			HtmlItem item;
-			for ( int i=0; i<result.size(); ++i ) {
-				item = (HtmlItem)result.get( i );
-				ram.writeBytes( item.getText() );
+			// debug
+			System.out.println( htmlItem.getType() );
+
+			Assert.assertEquals( expected[ i ][ 0 ], htmlItem.getType() );
+
+			switch ( type ) {
+			case HtmlItem.T_EXCLAMATION:
+				Assert.assertEquals( "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">", htmlItem.getText() );
+				break;
+			case HtmlItem.T_TAG:
+				Assert.assertEquals( "<html lang=\"en\">", htmlItem.getText() );
+				Assert.assertEquals( "html", htmlItem.getTagname() );
+				Assert.assertEquals( 1, htmlItem.getAttributes().size() );
+				Assert.assertEquals( "en", htmlItem.getAttribute( "lang" ) );
+				Assert.assertEquals( false, htmlItem.getClosed() );
+				break;
+			case HtmlItem.T_DIRECTIVE:
+				//Assert.assertEquals( "<@master file=\"master.html\">", htmlItem.getText() );
+				Assert.assertEquals( "master", htmlItem.getTagname() );
+				Assert.assertEquals( 1, htmlItem.getAttributes().size() );
+				Assert.assertEquals( "master.html", htmlItem.getAttribute( "file" ) );
+				Assert.assertEquals( true, htmlItem.getClosed() );
+				break;
+			case HtmlItem.T_COMMENT:
+				Assert.assertEquals( "<!-- #include virtual=\"inc_menu.html\" -->", htmlItem.getText() );
+				break;
+			case HtmlItem.T_TEXT:
+				Assert.assertEquals( "Hello world", htmlItem.getText() );
+				break;
+			case HtmlItem.T_ENDTAG:
+				Assert.assertEquals( "</html>", htmlItem.getText() );
+				Assert.assertEquals( "html", htmlItem.getTagname() );
+				break;
+			case HtmlItem.T_PROCESSING:
+				Assert.assertEquals( "<?Monkeys?>", htmlItem.getText() );
+				break;
 			}
-		}
-		catch (FileNotFoundException e) {
-		}
-		catch (IOException e) {
-		}
-
-		try {
-			if ( ram != null ) {
-				ram.close();
-			}
-		}
-		catch (IOException e) {
 		}
 	}
 
