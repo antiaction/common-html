@@ -97,7 +97,7 @@ public class TestHtmlParser extends TestCase {
 			type = htmlItem.getType();
 
 			// debug
-			System.out.println( htmlItem.getType() );
+			//System.out.println( htmlItem.getType() );
 
 			Assert.assertEquals( expected[ i ][ 0 ], htmlItem.getType() );
 
