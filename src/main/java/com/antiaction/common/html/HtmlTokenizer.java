@@ -54,18 +54,19 @@ public class HtmlTokenizer {
 
 	private HtmlInput in;
 
-	StringBuffer textBuf = new StringBuffer( 1024 );
-	StringBuffer tagBuf = new StringBuffer( 256 );
-	StringBuffer procBuf = new StringBuffer( 128 );
-	StringBuffer excltypeBuf = new StringBuffer( 128 );
-	StringBuffer commentBuf = new StringBuffer( 512 );
-	StringBuffer endtagBuf = new StringBuffer( 16 );
-	StringBuffer tagnameBuf = new StringBuffer( 16 );
-	StringBuffer tagtextBuf = new StringBuffer( 64 );
+	protected StringBuffer textBuf = new StringBuffer( 1024 );
+	protected StringBuffer tagBuf = new StringBuffer( 256 );
+	protected StringBuffer procBuf = new StringBuffer( 128 );
+	protected StringBuffer excltypeBuf = new StringBuffer( 128 );
+	protected StringBuffer commentBuf = new StringBuffer( 512 );
+	protected StringBuffer endtagBuf = new StringBuffer( 16 );
+	protected StringBuffer tagnameBuf = new StringBuffer( 16 );
+	protected StringBuffer tagtextBuf = new StringBuffer( 64 );
 
 	public void init(HtmlInput in) {
-		this.in = in;
+		state = S_TEXT;
 		missed = 0;
+		this.in = in;
 	}
 
 	public int next() throws IOException {

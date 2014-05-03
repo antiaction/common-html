@@ -7,13 +7,208 @@
 
 package com.antiaction.common.html;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 
-public class TestHtmlTokenizer {
+import junit.framework.TestCase;
+
+import org.junit.Assert;
+
+public class TestHtmlTokenizer extends TestCase {
+
+	public void testHtmlTokenizer() {
+		HtmlTokenizer tokenizer = new HtmlTokenizer();
+		Assert.assertNotNull( tokenizer );
+
+		String html;
+		Object[][] expected;
+		int token;
+
+		Object[][] cases = new Object[][] {
+				{ "", new Object[][] {
+						{ HtmlConst.T_EOS }
+				}},
+				{ "text", new Object[][] {
+						{ HtmlConst.T_TEXT, "text" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "text<html>", new Object[][] {
+						{ HtmlConst.T_TEXT, "text" },
+						{ HtmlConst.T_TAG_START, "html" },
+						{ HtmlConst.T_TAG_END, "<html>" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<html>", new Object[][] {
+						{ HtmlConst.T_TAG_START, "html" },
+						{ HtmlConst.T_TAG_END, "<html>" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<", new Object[][] {
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<?", new Object[][] {
+						{ HtmlConst.T_PROCESSING, "" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<?Monkeys?>", new Object[][] {
+						{ HtmlConst.T_PROCESSING, "Monkeys" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<?Monkeys?", new Object[][] {
+						{ HtmlConst.T_PROCESSING, "Monkeys" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<?Monkeys? no way?", new Object[][] {
+						{ HtmlConst.T_PROCESSING, "Monkeys? no way" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<!", new Object[][] {
+						{ HtmlConst.T_EXCLTYPE, "" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">", new Object[][] {
+						{ HtmlConst.T_EXCLTYPE, "DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\"" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\"", new Object[][] {
+						{ HtmlConst.T_EXCLTYPE, "DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\"" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<!-", new Object[][] {
+						{ HtmlConst.T_COMMENT, "" },
+						{ HtmlConst.T_EOS }
+				}},
+				// Strange excltypeBuf.
+				{ "<!- ", new Object[][] {
+						{ HtmlConst.T_EXCLTYPE, "-" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<!--", new Object[][] {
+						{ HtmlConst.T_COMMENT, "" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<!-- ", new Object[][] {
+						{ HtmlConst.T_COMMENT, " " },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<!-- -", new Object[][] {
+						{ HtmlConst.T_COMMENT, " " },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<!-- - ", new Object[][] {
+						{ HtmlConst.T_COMMENT, " - " },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<!-- --", new Object[][] {
+						{ HtmlConst.T_COMMENT, " " },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<!-- -- ", new Object[][] {
+						{ HtmlConst.T_COMMENT, " -- " },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<!-- -->", new Object[][] {
+						{ HtmlConst.T_COMMENT, " " },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "</", new Object[][] {
+						{ HtmlConst.T_ENDTAG, "" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "</>", new Object[][] {
+						{ HtmlConst.T_ENDTAG, "" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "</a>", new Object[][] {
+						{ HtmlConst.T_ENDTAG, "a" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "</  \t \r \n", new Object[][] {
+						{ HtmlConst.T_ENDTAG, "" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "</  \t \r \n>", new Object[][] {
+						{ HtmlConst.T_ENDTAG, "" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<a", new Object[][] {
+						{ HtmlConst.T_TAG_START, "a" },
+						{ HtmlConst.T_EOS }
+				}},
+		};
+
+		try {
+			for ( int i=0; i<cases.length; ++i ) {
+				html = (String)cases[ i ][ 0 ];
+				expected = (Object[][])cases[ i ][ 1 ];
+
+				// debug
+				System.out.println( "**** " + i + " ****" );
+
+				tokenizer.init( HtmlStreamInput.getInstance( new ByteArrayInputStream( html.getBytes( "UTF-8"  ) ) ) );
+
+				int j = 0;
+				boolean bLoop = true;
+				while ( bLoop ) {
+					token = tokenizer.next();
+					System.out.println( token + " " + expected[ j ][ 0 ] );
+					switch ( token ) {
+					case HtmlConst.T_ERROR:
+						bLoop = false;
+						break;
+					case HtmlConst.T_EOS:
+						bLoop = false;
+						break;
+					case HtmlConst.T_TEXT:
+						Assert.assertEquals( expected[ j ][ 1 ], tokenizer.textBuf.toString() );
+						break;
+					case HtmlConst.T_PROCESSING:
+						Assert.assertEquals( expected[ j ][ 1 ], tokenizer.procBuf.toString() );
+						break;
+					case HtmlConst.T_EXCLTYPE:
+						Assert.assertEquals( expected[ j ][ 1 ], tokenizer.excltypeBuf.toString() );
+						break;
+					case HtmlConst.T_COMMENT:
+						Assert.assertEquals( expected[ j ][ 1 ], tokenizer.commentBuf.toString() );
+						break;
+					case HtmlConst.T_ENDTAG:
+						Assert.assertEquals( expected[ j ][ 1 ], tokenizer.endtagBuf.toString() );
+						break;
+					case HtmlConst.T_TAG_START:
+						Assert.assertEquals( expected[ j ][ 1 ], tokenizer.tagnameBuf.toString() );
+						break;
+					case HtmlConst.T_TAG_TEXT:
+						break;
+					case HtmlConst.T_TAG_EQ:
+						break;
+					case HtmlConst.T_TAG_TEXT_QUOTED:
+						break;
+					case HtmlConst.T_TAG_CLOSED:
+						break;
+					case HtmlConst.T_TAG_END:
+						Assert.assertEquals( expected[ j ][ 1 ], tokenizer.tagBuf.toString() );
+						break;
+					case HtmlConst.T_DIRECTIVE_START:
+						break;
+					}
+					++j;
+				}
+			}
+		}
+		catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			Assert.fail( "Unexpected exception!" );
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			Assert.fail( "Unexpected exception!" );
+		}
+	}
 
 	public static void main(String[] args) {
 		String file = "C:\\dk.alfa-chins.www\\guestbook.html";
