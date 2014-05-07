@@ -25,11 +25,9 @@ public class TestHtmlTokenizer extends TestCase {
 		HtmlTokenizer tokenizer = new HtmlTokenizer();
 		Assert.assertNotNull( tokenizer );
 
-		String html;
-		Object[][] expected;
-		int token;
+		Object[][] cases;
 
-		Object[][] cases = new Object[][] {
+		cases = new Object[][] {
 				{ "", new Object[][] {
 						{ HtmlConst.T_EOS }
 				}},
@@ -136,12 +134,98 @@ public class TestHtmlTokenizer extends TestCase {
 						{ HtmlConst.T_ENDTAG, "" },
 						{ HtmlConst.T_EOS }
 				}},
+		};
+
+		testCases( tokenizer, cases );
+
+		cases = new Object[][] {
+				{ "<@", new Object[][] {
+						{ HtmlConst.T_DIRECTIVE_START, "" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<@>", new Object[][] {
+						{ HtmlConst.T_DIRECTIVE_START, "" },
+						{ HtmlConst.T_TAG_END, "<@>" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<@ >", new Object[][] {
+						{ HtmlConst.T_DIRECTIVE_START, "" },
+						{ HtmlConst.T_TAG_START, "" },
+						{ HtmlConst.T_TAG_END, "<@ >" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<@\t>", new Object[][] {
+						{ HtmlConst.T_DIRECTIVE_START, "" },
+						{ HtmlConst.T_TAG_START, "" },
+						{ HtmlConst.T_TAG_END, "<@\t>" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<@\n>", new Object[][] {
+						{ HtmlConst.T_DIRECTIVE_START, "" },
+						{ HtmlConst.T_TAG_START, "" },
+						{ HtmlConst.T_TAG_END, "<@\n>" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<@\r>", new Object[][] {
+						{ HtmlConst.T_DIRECTIVE_START, "" },
+						{ HtmlConst.T_TAG_START, "" },
+						{ HtmlConst.T_TAG_END, "<@\r>" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<@/", new Object[][] {
+						{ HtmlConst.T_DIRECTIVE_START, "" },
+						{ HtmlConst.T_TAG_CLOSED, ""  },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<@master", new Object[][] {
+						{ HtmlConst.T_DIRECTIVE_START, "master" },
+						{ HtmlConst.T_EOS }
+				}},
+				// "<@master file=\"master.html\">"
+		};
+
+		testCases( tokenizer, cases );
+
+		cases = new Object[][] {
 				{ "<a", new Object[][] {
 						{ HtmlConst.T_TAG_START, "a" },
 						{ HtmlConst.T_EOS }
 				}},
+				{ "<html", new Object[][] {
+						{ HtmlConst.T_TAG_START, "html" },
+						{ HtmlConst.T_EOS },
+				}},
+				{ "<a>", new Object[][] {
+						{ HtmlConst.T_TAG_START, "a" },
+						{ HtmlConst.T_TAG_END, "<a>" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<html>", new Object[][] {
+						{ HtmlConst.T_TAG_START, "html" },
+						{ HtmlConst.T_TAG_END, "<html>" },
+						{ HtmlConst.T_EOS },
+				}},
+				{ "<a/>", new Object[][] {
+						{ HtmlConst.T_TAG_START, "a" },
+						{ HtmlConst.T_TAG_CLOSED, "a"  },
+						{ HtmlConst.T_TAG_END, "<a/>" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<html//>", new Object[][] {
+						{ HtmlConst.T_TAG_START, "html" },
+						{ HtmlConst.T_TAG_CLOSED, "html" },
+						{ HtmlConst.T_TAG_END, "<html//>" },
+						{ HtmlConst.T_EOS },
+				}},
 		};
 
+		testCases( tokenizer, cases );
+	}
+
+	public void testCases(HtmlTokenizer tokenizer, Object[][] cases) {
+		String html;
+		Object[][] expected;
+		int token;
 		try {
 			for ( int i=0; i<cases.length; ++i ) {
 				html = (String)cases[ i ][ 0 ];
@@ -189,11 +273,13 @@ public class TestHtmlTokenizer extends TestCase {
 					case HtmlConst.T_TAG_TEXT_QUOTED:
 						break;
 					case HtmlConst.T_TAG_CLOSED:
+						Assert.assertEquals( expected[ j ][ 1 ], tokenizer.tagnameBuf.toString() );
 						break;
 					case HtmlConst.T_TAG_END:
 						Assert.assertEquals( expected[ j ][ 1 ], tokenizer.tagBuf.toString() );
 						break;
 					case HtmlConst.T_DIRECTIVE_START:
+						Assert.assertEquals( expected[ j ][ 1 ], tokenizer.tagnameBuf.toString() );
 						break;
 					}
 					++j;
