@@ -18,9 +18,14 @@ import java.io.UnsupportedEncodingException;
 import junit.framework.TestCase;
 
 import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
+@RunWith(JUnit4.class)
 public class TestHtmlTokenizer extends TestCase {
 
+	@Test
 	public void testHtmlTokenizer() {
 		HtmlTokenizer tokenizer = new HtmlTokenizer();
 		Assert.assertNotNull( tokenizer );
@@ -217,6 +222,43 @@ public class TestHtmlTokenizer extends TestCase {
 						{ HtmlConst.T_TAG_END, "<html//>" },
 						{ HtmlConst.T_EOS },
 				}},
+		};
+
+		testCases( tokenizer, cases );
+
+		cases = new Object[][] {
+				{ "<  ", new Object[][] {
+						{ HtmlConst.T_TAG_START, " " },
+						{ HtmlConst.T_EOS }
+				}},
+				/*
+				{ "<html", new Object[][] {
+						{ HtmlConst.T_TAG_START, "html" },
+						{ HtmlConst.T_EOS },
+				}},
+				{ "<a>", new Object[][] {
+						{ HtmlConst.T_TAG_START, "a" },
+						{ HtmlConst.T_TAG_END, "<a>" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<html>", new Object[][] {
+						{ HtmlConst.T_TAG_START, "html" },
+						{ HtmlConst.T_TAG_END, "<html>" },
+						{ HtmlConst.T_EOS },
+				}},
+				{ "<a/>", new Object[][] {
+						{ HtmlConst.T_TAG_START, "a" },
+						{ HtmlConst.T_TAG_CLOSED, "a"  },
+						{ HtmlConst.T_TAG_END, "<a/>" },
+						{ HtmlConst.T_EOS }
+				}},
+				{ "<html//>", new Object[][] {
+						{ HtmlConst.T_TAG_START, "html" },
+						{ HtmlConst.T_TAG_CLOSED, "html" },
+						{ HtmlConst.T_TAG_END, "<html//>" },
+						{ HtmlConst.T_EOS },
+				}},
+				*/
 		};
 
 		testCases( tokenizer, cases );
