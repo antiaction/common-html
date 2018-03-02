@@ -10,9 +10,14 @@ package com.antiaction.common.html;
 import junit.framework.TestCase;
 
 import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
+@RunWith(JUnit4.class)
 public class TestHtmlProcessing extends TestCase {
 
+	@Test
 	public void testHtmlProcessing() {
 		HtmlProcessing htmlItem;
 		HtmlProcessing htmlItem2;

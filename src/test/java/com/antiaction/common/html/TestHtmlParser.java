@@ -17,9 +17,14 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
+@RunWith(JUnit4.class)
 public class TestHtmlParser extends TestCase {
 
+	@Test
 	public void testHtmlParser() {
 		StringBuilder sb = new StringBuilder();
 		sb.append( "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" );
